@@ -1,20 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 
 #include "list_client.h"
 
 
 
 
-int main ()
+int main (int argc, char *argv[])
 {
-    
+
     char file[50];
     char menu;
+
+
+    if ( argc > 2 )
+    {
+        printf("Too many arguments\n");
+        return 1;
+    } else if (argc != 2) {
+        printf("File name didn't specify\n");
+        puts ("Enter the file name\n");
+        gets (file);
+    } else {
+        printf("File name received '%s'\n", argv[0]);
+        strcpy(file, argv[1]);
+    }
+
+    // Указатель на начало (голову) списка
     list items = NULL;
-    puts ("Enter the file name");
-    gets (file);
+
+    
     // items = read_file (argv[1]);
     items = read_file (file);
     do
@@ -28,10 +45,10 @@ int main ()
        menu = getchar(); getchar();
        switch (menu)
        {
-              case '1': items = new_node (items, input_item()); break;
-              case '2': show (items); break;
-              case '3': search (items); break;
-              case '4': items = delete_node (items);
+            case '1': items = new_node (items, input_item()); break;
+            case '2': show (items); break;
+            case '3': search (items); break;
+            case '4': items = delete_node (items);
        }
     }
     while (menu!='5');
