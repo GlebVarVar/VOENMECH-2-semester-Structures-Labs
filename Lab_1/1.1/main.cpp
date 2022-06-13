@@ -4,7 +4,7 @@
 #include "iomanip"
 
 #include "main.h"
-#include "D:\Voenmech-Study\Proga\helpFunctions\functions.cpp"
+#include "..\..\helpFunctions\functions.cpp"
 
 using namespace std;
 
@@ -43,7 +43,7 @@ void List<T>::pushBack(T data) {
         // Добавляем новый элемент
         pCur->pNext = tail = new Node<T>(data, pCur);
     }
-
+    
     size++;
     
 }
