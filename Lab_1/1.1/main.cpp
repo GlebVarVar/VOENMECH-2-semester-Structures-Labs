@@ -135,9 +135,11 @@ void List<T>::insert(T value) {
         pCur = pCur->pNext;
     }
     
-    if (pCur->pPrev ==  nullptr) {   // Если хотим вставить в начало
+    if (pCur ==  nullptr) {   // Если хотим вставить в начало
         pushFront(value);
-    } else if (pCur->pNext == nullptr) { // Если хотим вставить в конец
+    } else if (pCur->pPrev ==  nullptr) {   // Если хотим вставить в начало
+        pushFront(value);
+    }else if (pCur->pNext == nullptr) { // Если хотим вставить в конец
         pushBack(value);
     } else {
         // Создаём указатель на новый элемент
@@ -255,7 +257,13 @@ void List<T>::addSet() {
     cout << "minifigures count:\n"; newSet.minifigures = getVariant(50);
     cout << "Parts count:\n"; newSet.parts = getVariant(20000);
     cout << "Price:\n";  newSet.price = getVariant(1000000);
-    cout << "Sets count:\n"; newSet.count = getVariant(10000);}
+    cout << "Sets count:\n"; newSet.count = getVariant(10000);
+    cout << "Is your set released under the Star Wars franchise?\n1- Yes\n2 -No\n>"; newSet.type = getVariant(2);
+    if (newSet.type == 1) {
+        cout << "Set ROI of the set\n"; newSet.variation.ROI = getVariant(1000);
+    } else {
+        cout << "Set consumer age:\n"; cin.getline(newSet.variation.age, 10);
+    }}
     
     
 
@@ -312,8 +320,8 @@ void List<T>::printTable (Node<T> *direction) {
 
         system("cls");
         
-        cout << "|  N  |       Set title        | Set Number | Year release | Minifigures | Parts count |  Price  |  Count  |" << endl;
-        cout << "------------------------------------------------------------------------------------------------------------" << endl;
+        cout << "|  N  |       Set title        | Set Number | Year release | Minifigures | Parts count |  Price  |  Count  | ROI/Consumer age |" << endl;
+        cout << "-------------------------------------------------------------------------------------------------------------------------------" << endl;
         while (c != 5 && pCur != nullptr) {
             cout << "|" << setw(4) << ++N << " | ";
             cout << setw(22) << pCur->data.title << " | ";
@@ -322,7 +330,12 @@ void List<T>::printTable (Node<T> *direction) {
             cout << setw(11) << pCur->data.minifigures << " | ";
             cout << setw(11) << pCur->data.parts << " | ";
             cout << setw(7) << pCur->data.price << " | ";
-            cout << setw(7) << pCur->data.count << " | " << endl;
+            cout << setw(7) << pCur->data.count << " | " ;
+            if (pCur->data.type == 1) {
+                cout << setw(15) << pCur->data.variation.ROI << "% | " << endl;
+            } else {
+                cout << setw(16) << pCur->data.variation.age << " | " << endl;
+            }
 
             if (direction == head) {
                 pCur = pCur->pNext;
@@ -332,7 +345,7 @@ void List<T>::printTable (Node<T> *direction) {
             c++;
         }
         total += c;
-        cout << "------------------------------------------------------------------------------------------------------------" << endl << endl;
+        cout << "-------------------------------------------------------------------------------------------------------------------------------" << endl << endl;
     
         string menu[] = {
             "1. Forward",
@@ -402,24 +415,36 @@ void List<T>::setData(Node<T> *pCur) {
     
 
     int variant = 0;
-
+    int N = 0;
     do {
         system("cls");
         // вывод элемента
         {
-            cout << "|  N  |       Set title        | Set Number | Year release | Minifigures | Parts count |  Price  |  Count  |" << endl;
-            cout << "------------------------------------------------------------------------------------------------------------" << endl;
-            cout << "|" << setw(4) << 1 << " | ";
+            cout << "|  N  |       Set title        | Set Number | Year release | Minifigures | Parts count |  Price  |  Count  | ROI/Consumer age |" << endl;
+            cout << "-------------------------------------------------------------------------------------------------------------------------------" << endl;
+            cout << "|" << setw(4) << ++N << " | ";
             cout << setw(22) << pCur->data.title << " | ";
             cout << setw(10) << pCur->data.itemNumber << " | ";
             cout << setw(12) << pCur->data.yearRelease << " | ";
             cout << setw(11) << pCur->data.minifigures << " | ";
             cout << setw(11) << pCur->data.parts << " | ";
             cout << setw(7) << pCur->data.price << " | ";
-            cout << setw(7) << pCur->data.count << " | " << endl;
-            cout << "------------------------------------------------------------------------------------------------------------" << endl;
+            cout << setw(7) << pCur->data.count << " | " ;
+            if (pCur->data.type == 1) {
+                cout << setw(15) << pCur->data.variation.ROI << "% | " << endl;
+            } else {
+                cout << setw(16) << pCur->data.variation.age << " | " << endl;
+            }
+            cout << "-------------------------------------------------------------------------------------------------------------------------------" << endl;
+            
         }
-
+        string variation;
+        if(pCur->data.type == 1) {
+            string variation = "8. Star Wars variation";
+        } else {
+            string variation = "8. ROI variation";
+        }
+         
         string menu[] = {
             "Choose set data to change:",
             "1. Title",
@@ -428,12 +453,14 @@ void List<T>::setData(Node<T> *pCur) {
             "4. Minifig count",
             "5. Parts count",
             "6. Set price",
-            "7. Sets count"};
+            "7. Sets count",
+            variation,
+            };
 
-        printMenu(menu, 8);
-        exitMenu(8);
+        printMenu(menu, 9);
+        exitMenu(9);
 
-        variant = getVariant(8);
+        variant = getVariant(9);
         system("cls");
         cout << "Enter new value: ";
         switch (variant)
@@ -452,11 +479,18 @@ void List<T>::setData(Node<T> *pCur) {
                 pCur->data.price = getVariant(1000000); break;
             case 7:
                 pCur->data.count = getVariant(10000); break;
+            case 8:
+                if (pCur->data.type == 1) {
+                    pCur->data.variation.ROI = getVariant(1000);
+                } else {
+                    cin.getline(pCur->data.variation.age, 10);
+                }
+                break;
         }
 
 
         
-    } while (variant != 8);
+    } while (variant != 9);
     
     
     
@@ -505,28 +539,34 @@ void List<T>::search() {
         int year = getVariant(2022);
         system("cls"); // очищаем экран
         int flag = 1;
-
+        int N = 0;
         Node<T> *pCur = head;
         while (pCur != nullptr) {
             if (pCur->data.yearRelease == year) {
                 if (flag == 1) {
-                    cout << "|  N  |       Set title        | Set Number | Year release | Minifigures | Parts count |  Price  |  Count  |" << endl;
-                    cout << "------------------------------------------------------------------------------------------------------------" << endl;
+                    cout << "|  N  |       Set title        | Set Number | Year release | Minifigures | Parts count |  Price  |  Count  | ROI/Consumer age |" << endl;
+                    cout << "-------------------------------------------------------------------------------------------------------------------------------" << endl;
                 }
                 flag = 0;
-                cout << "|" << setw(4) << 1 << " | ";
+                
+                cout << "|" << setw(4) << ++N << " | ";
                 cout << setw(22) << pCur->data.title << " | ";
                 cout << setw(10) << pCur->data.itemNumber << " | ";
                 cout << setw(12) << pCur->data.yearRelease << " | ";
                 cout << setw(11) << pCur->data.minifigures << " | ";
                 cout << setw(11) << pCur->data.parts << " | ";
                 cout << setw(7) << pCur->data.price << " | ";
-                cout << setw(7) << pCur->data.count << " | " << endl;
+                cout << setw(7) << pCur->data.count << " | ";
+                if (pCur->data.type == 1) {
+                    cout << setw(15) << pCur->data.variation.ROI << "% | " << endl;
+                } else {
+                    cout << setw(16) << pCur->data.variation.age << " | " << endl;
+                }
             }
             pCur = pCur->pNext;
         }
         if (flag == 0) {
-            cout << "------------------------------------------------------------------------------------------------------------" << endl << endl;
+             cout << "-------------------------------------------------------------------------------------------------------------------------------" << endl << endl;
             system("pause");
             
             return; 

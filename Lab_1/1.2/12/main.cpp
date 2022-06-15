@@ -29,7 +29,7 @@ int main() {
         switch (variant) {
             case 1: {
                 int size = chooseSize();
-                Vector *deque = new Vector(size);
+                Vector *deque = new Vector(size + 1);
                 testDeque(deque);
 
                 break;
@@ -85,23 +85,19 @@ void testDeque(T *deque) {
     // удаление простых чисел из дека
     int sizeDeque = deque->size;
     T *dequeHelp = new T(sizeDeque);
-    DataType array[sizeDeque];
-    for (int i = 0; i < sizeDeque; i++) {
-        array[i] = deque->getFront();
-        
-        if (!isPrimeNumber(array[i])) {
-            dequeHelp->pushBack(array[i]);
-        }
 
-        deque->popFront();
-    }
     for (int i = 0; i < sizeDeque; i++) {
-        deque->pushBack(array[i]);
+        DataType temp = deque->getFront();
+        if (!isPrimeNumber(temp)) {
+            dequeHelp->pushBack(temp);
+        }
+        deque->popFront();
+        deque->pushBack(temp);
     }
-    
+
 
     T *dequeSorted = new T(dequeHelp->size);
-    
+    // printDeque(dequeHelp);
 
     // неудачная попытка сортировки
     {
@@ -162,48 +158,110 @@ void testDeque(T *deque) {
             // system("pause");
         }
     
-    // сортировка дека в порядке убывания
+    // Неудачная попытка сортировки
     {
-        DataType array2[dequeHelp->size];
-        int arrSize = 0;
-        DataType temp;
-        int sizeDeq = dequeHelp->size;
+    //     DataType array2[dequeHelp->size];
+    //     int arrSize = 0;
+    //     DataType temp;
+    //     int sizeDeq = dequeHelp->size;
+    //
+    //
+    //     for (int l = 0; l < sizeDeq; l++) {
+    //         temp = 0;
+    //         for(int j = 0; j < sizeDeq - l; j++) {
+    //
+    //             if (dequeHelp->getFront() >= temp) {
+    //                 temp = dequeHelp->getFront();  
+    //             } 
+    //             dequeSorted->pushBack(dequeHelp->getFront());
+    //             dequeHelp->popFront();
+    //         }
+    //         array2[arrSize++] = temp;
+    //         int flag = 0;
+    //         for (int m = 0; m < sizeDeq - l; m++) {
+    //
+    //             if (dequeSorted->getFront() == temp && flag == 0) {
+    //                 dequeSorted->popFront();
+    //                 flag = 1;
+    //             } else {
+    //                 dequeHelp->pushBack(dequeSorted->getFront());
+    //                 dequeSorted->popFront();
+    //             }
+    //         }
+    //
+    //     }
+    //
+    //     // Присвоение деку значений из массива 
+    //     for (int n = 0; n < arrSize; n++) {
+    //         dequeSorted->pushBack(array2[n]);
+    //     }
+    //   
+    }
+    // надеюсь удачная попытка сортировки дека - нет
+    {
+        
+        // DataType temp = 0;
+        // DataType current;
+        // int sizeDeq = dequeHelp->size;
         
 
-        for (int l = 0; l < sizeDeq; l++) {
-            temp = 0;
-            for(int j = 0; j < sizeDeq - l; j++) {
+        // for (int l = 0; l < sizeDeq; l++) {
+        //     temp = 0;
+        //     for(int j = 0; j < sizeDeq - l; j++) {
+        //         current = dequeHelp->getFront();
+        //         if (current >= temp) {
+        //             temp = current;  
+        //         } 
+        //         dequeHelp->popFront();
+        //         dequeHelp->pushBack(current);
+                
+        //     }
 
-                if (dequeHelp->getFront() >= temp) {
-                    temp = dequeHelp->getFront();  
-                } 
-                dequeSorted->pushBack(dequeHelp->getFront());
-                dequeHelp->popFront();
-            }
-            array2[arrSize++] = temp;
-            int flag = 0;
-            for (int m = 0; m < sizeDeq - l; m++) {
+        //     dequeSorted->pushBack(temp);
+    
+        //     for (int n = 0; n < sizeDeq - l; n++) {
+        //         current = dequeHelp->getFront();
+        //         if (current == temp) {
+        //             dequeHelp->popFront();
+        //             break;
+        //         } else {
+        //             dequeHelp->popFront();
+        //             dequeHelp->pushBack(current);
+        //         }
+        //     }
+        // }
 
-                if (dequeSorted->getFront() == temp && flag == 0) {
-                    dequeSorted->popFront();
-                    flag = 1;
-                } else {
-                    dequeHelp->pushBack(dequeSorted->getFront());
-                    dequeSorted->popFront();
-                }
-            }
-
-        }
-
-        // Присвоение деку значений из массива 
-        for (int n = 0; n < arrSize; n++) {
-            dequeSorted->pushBack(array2[n]);
-        }
         
     }
 
+    {
+        DataType temp;
+        DataType current;
+        int sizeDeq = dequeHelp->size;
+        
 
+        dequeSorted->pushBack(dequeHelp->getFront());
+        dequeHelp->popFront();
 
+        while(!dequeHelp->Empty()) {
+            current = dequeHelp->getFront();   
+            if (current >= dequeSorted->getFront()) {
+                dequeSorted->pushFront(current);
+                dequeHelp->popFront();
+            } else if(current <= dequeSorted->getBack()){
+                dequeSorted->pushBack(current);
+                dequeHelp->popFront();
+            } else {
+                dequeHelp->popFront();
+                while(current > dequeSorted->getBack()) {
+                    dequeHelp->pushFront(dequeSorted->getBack());
+                    dequeSorted->popBack();
+                }
+                dequeSorted->pushBack(current);
+            }
+        }
+
+    }
     int variant;
     do {
         system("cls");
@@ -222,10 +280,13 @@ void testDeque(T *deque) {
         switch (variant) {
             case 1: {
                 printDeque(deque);
+                
                 break;
             }
                 
             case 2: {
+                
+                
                 printDeque(dequeSorted);
                 break;
             }
@@ -262,7 +323,7 @@ void printDeque(Deque *deque) {
     system("pause");
 }
 
-
+// Данная функция проверяет является ли число простым
 DataType isPrimeNumber(DataType number) {
     bool isPrime = true;
     for(int i = 2; i <= number / 2; ++i) {

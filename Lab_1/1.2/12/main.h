@@ -71,7 +71,7 @@ class List: public Deque
 
 class Vector: public Deque
 {
-    int head; //индексы головы и хвоста
+    int head, tail; //индексы головы и хвоста
     
     DataType *data; //массив для хранения элементов
     public:
@@ -106,6 +106,7 @@ Vector::Vector(int length) {
     this->data = new DataType[this->maxlength];
 
     this->head = 0;
+    this->tail = maxlength - 1;
     this->size = 0;
 }
 
@@ -132,7 +133,7 @@ int List::Empty() {
 }
 
 int Vector::Empty() {
-    return this->head == this->size;
+    return (this->tail + 1 ) % maxlength == this->head;
 }
 
 
@@ -142,7 +143,7 @@ int List::Full() {
 }
 
 int Vector::Full() {
-    return this->size == this->maxlength;
+    return ( this->tail + 2 ) % maxlength == this->head;
 }
 
 
@@ -173,11 +174,14 @@ void Vector:: pushFront(DataType item) {
         return;
     } else {
         int value;
-        for (int i = this->size ; i != 0 ; i--) {
-            value = this->data[i - 1];
-            this->data[i] = value;
-        }
-        this->data[0] = item;
+        // for (int i = this->size ; i != 0 ; i--) {
+        //     value = this->data[i - 1];
+        //     this->data[i] = value;
+        // }
+        // this->data[0] = item;
+
+        this->head = this->head ? this->head - 1 : maxlength - 1;
+        this->data[this->head] = item;
     }
     
     
@@ -201,13 +205,14 @@ void List::pushBack(DataType data) {
     this->size++;
 }
 
-void Vector::pushBack(DataType data) {
+void Vector::pushBack(DataType item) {
     if (Full()) {
         cout << "deque is full :(" << endl;
         return;
     }
-    this->data[size] = data;
-
+    // this->data[size] = data;
+    this->tail = ( this->tail + 1 ) % maxlength;
+    this->data[this-> tail] = item;
     this->size++;
 }
 
@@ -226,7 +231,7 @@ DataType Vector::getFront() {
         cout << "deque is empty :(" << endl;
         return 0;
     }
-    return data[head];
+    return this->data[this->head];
 }
 
 
@@ -244,7 +249,7 @@ DataType Vector::getBack() {
         cout << "deque is empty :(" << endl;
         return 0;
     }
-    return data[size - 1];
+    return this->data[this->tail];
 }
 
 
@@ -279,8 +284,12 @@ DataType Vector::popBack() {
         cout << "deque is empty :(" << endl;
         return 0;
     }
+    // size--;
+    // return data[size];
+    DataType temp = tail;
+    this->tail = this->tail ? this->tail - 1 : maxlength - 1;
     size--;
-    return data[size];
+    return this->data[temp];
 }
 
 
@@ -317,16 +326,21 @@ DataType Vector::popFront() {
         return 0;
     }
 
-    DataType tempData = data[head];
+    // DataType tempData = data[head];
 
-    int value;
-    for (int i = this->head + 1; i != size ; i++) {
-        value = this->data[i];
-        this->data[i-1] = value;
-    }
+    // int value;
+    // for (int i = this->head + 1; i != size ; i++) {
+    //     value = this->data[i];
+    //     this->data[i-1] = value;
+    // }
     
+    // size--;
+    // return tempData;
+
+    DataType temp = this->head;
+    this->head = (this->head + 1) % maxlength;
     size--;
-    return tempData;
+    return this->data[temp];
 }
 
 

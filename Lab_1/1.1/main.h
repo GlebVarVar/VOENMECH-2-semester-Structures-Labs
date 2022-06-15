@@ -10,6 +10,11 @@ struct LEGO {
     int parts;
     int price;
     int count;
+    int type;
+    union {
+        char age[10];
+        int ROI;
+    } variation;
 };
 
 
