@@ -75,7 +75,7 @@ void testDeque(T *deque) {
         while (!deque->Full()) {
             int randNumber = 1 + rand();
 
-            deque->pushFront(randNumber);
+            deque->pushBack(randNumber);
         }
 
     }
